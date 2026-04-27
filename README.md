@@ -1,4 +1,4 @@
-# Task App — DevOps Project
+# DevOps Launchpad — Full Stack App with Production DevOps Pipeline
 
 A full-stack task management app built to practice real-world DevOps workflows end to end.
 
