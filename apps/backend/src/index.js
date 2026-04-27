@@ -14,4 +14,9 @@ app.get('/', (req, res) => {
   res.send('<h1>Hello! The backend is working.</h1>');
 });
 
+// version 2
+app.get('/api/health', (req, res) => {
+  res.json({ status: 'ok' });
+});
+
 app.listen(4000, () => console.log('Backend running on :4000'));

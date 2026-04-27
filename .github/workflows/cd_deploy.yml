@@ -11,7 +11,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Deploy to VM
         uses: appleboy/ssh-action@v1.0.0
@@ -21,6 +21,32 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             cd ~/practicee2-20hrs-
+
+            # Save current image tag for rollback
+            CURRENT_TAG=$(docker images task-app-backend --format "{{.ID}}" | head -1)
+            echo $CURRENT_TAG > ~/.last_deploy_tag
+
+            # Pull and deploy
             git pull origin main
             docker compose up --build -d
+
             echo "Deploy complete ✅"
+
+      - name: Health Check
+        run: |
+          sleep 15
+          curl -f https://taskapp-hanny.ddns.net/api/health || exit 1
+          echo "Health check passed ✅"
+
+      - name: Rollback if health check failed
+        if: failure()
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.VM_HOST }}
+          username: ${{ secrets.VM_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            cd ~/practicee2-20hrs-
+            git checkout HEAD~1
+            docker compose up --build -d
+            echo "Rolled back ✅"
