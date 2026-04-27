@@ -19,4 +19,7 @@ app.get('/api/health', (req, res) => {
   res.json({ status: 'ok' });
 });
 
+// ADDED ERROR FOR TEST
+throw new Error("Simulated crash for debugging practice!");
+
 app.listen(4000, () => console.log('Backend running on :4000'));
