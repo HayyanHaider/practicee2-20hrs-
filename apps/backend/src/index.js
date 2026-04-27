@@ -19,8 +19,4 @@ app.get('/api/health', (req, res) => {
   res.json({ status: 'ok' });
 });
 
-// error to test rollback in cd
-chigga_is_high
-
-
 app.listen(4000, () => console.log('Backend running on :4000'));
